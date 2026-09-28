@@ -82,19 +82,19 @@ IST storage for matches: `match_date date`, `start_time time`, `reporting_time t
 
 ## 7. Implementation checklist
 
-- [ ] Scaffold Next.js 16 + TypeScript strict + Tailwind 4 + ESLint + Prettier
-- [ ] Supabase local config, migrations, RLS, triggers, RPCs, seed data
-- [ ] IST date library + tests (UTC server, non-India browser, midnight)
-- [ ] Auth: sign-up, sign-in, sign-out, password reset, session refresh proxy, pending/inactive gating
-- [ ] Profiles and private phone, notification preferences, account deactivation
-- [ ] Teams, memberships (unlimited), venues, opponents, dummy opponents
-- [ ] Tournaments: CRUD, enroll teams, archive, views (current/upcoming/completed/archived)
-- [ ] Matches: create/edit/cancel/delete, category rules, duplicate warning + admin override, list views, calendar, details
-- [ ] Participation: self-response, admin management, playing XI, counts, readiness
-- [ ] Reminder engine + cron endpoint + CLI command, idempotent, retries
-- [ ] In-app notification center (badge, filters, read/unread, deep links)
-- [ ] PWA: manifest, icons, service worker, offline page, push subscribe/unsubscribe/test, device list
-- [ ] Admin area: users (approve, invite, promote, deactivate), audit log, deliveries
-- [ ] Unit, integration/authorization and E2E tests
-- [ ] GitHub Actions CI, Vercel config, scheduler workflow
-- [ ] Documentation set
+- [x] Scaffold Next.js 16 + TypeScript strict + Tailwind 4 + ESLint + Prettier
+- [x] Supabase local config, migrations, RLS, triggers, RPCs, seed data
+- [x] IST date library + tests (UTC server, non-India browser, midnight)
+- [x] Auth: sign-up, sign-in, sign-out, password reset, session refresh proxy, pending/inactive gating
+- [x] Profiles and private phone, notification preferences, account deactivation
+- [x] Teams, memberships (unlimited), venues, opponents, dummy opponents
+- [x] Tournaments: CRUD, enroll teams, archive, views (current/upcoming/completed/archived)
+- [x] Matches: create/edit/cancel/delete, category rules, duplicate warning + admin override, list views, calendar, details
+- [x] Participation: self-response, admin management, playing XI, counts, readiness
+- [x] Reminder engine + cron endpoint + CLI command, idempotent, retries
+- [x] In-app notification center (badge, filters, read/unread, deep links)
+- [x] PWA: manifest, icons, service worker, offline page, push subscribe/unsubscribe/test, device list
+- [x] Admin area: users (approve, invite, promote, deactivate), audit log, deliveries
+- [x] Unit, integration/authorization and E2E tests
+- [x] GitHub Actions CI, Vercel config, scheduler workflow
+- [x] Documentation set
