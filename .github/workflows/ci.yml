@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, "claude/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Format, lint, typecheck, unit tests, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:unit
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
+  integration:
+    name: Database authorization, reminder and end-to-end tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Start local Supabase (Postgres, Auth, REST, Mailpit)
+        run: npm run db:start
+      - name: Write local test environment (ephemeral demo keys only)
+        run: |
+          eval "$(supabase status -o env)"
+          VAPID=$(npx --yes web-push generate-vapid-keys --json)
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON_KEY"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY"
+            echo "NEXT_PUBLIC_SITE_URL=http://localhost:3000"
+            echo "CRON_SECRET=ci-$(openssl rand -hex 16)"
+            echo "NEXT_PUBLIC_VAPID_PUBLIC_KEY=$(echo "$VAPID" | jq -r .publicKey)"
+            echo "VAPID_PRIVATE_KEY=$(echo "$VAPID" | jq -r .privateKey)"
+            echo "VAPID_SUBJECT=mailto:ci@example.com"
+          } > .env.local
+      - run: npm run test:integration
+      - name: Reset seed data for end-to-end tests
+        run: npm run db:reset
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
