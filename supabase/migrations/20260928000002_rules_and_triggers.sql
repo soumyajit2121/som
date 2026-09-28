@@ -342,6 +342,11 @@ begin
     new.cancelled_at := null;
   end if;
 
+  if new.category = 'tournament' and new.tournament_id is null then
+    raise exception 'TOURNAMENT_REQUIRED' using errcode = '23514',
+      detail = 'A Tournament Match must be linked to an enrolled tournament.';
+  end if;
+
   -- Tournament matches require a current enrolment of our team.
   if new.category = 'tournament'
      and (tg_op = 'INSERT'

@@ -32,13 +32,22 @@ export function normalizeTime(value: string): string {
   return value.slice(0, 5);
 }
 
+/** Accepts ISO-8601 and Postgres text forms ("2026-10-12 01:30:00+00"). */
+function parseInstantString(value: string): DateTime {
+  const iso = DateTime.fromISO(value, { setZone: true });
+  if (iso.isValid) return iso;
+  const sql = DateTime.fromSQL(value, { setZone: true });
+  if (sql.isValid) return sql;
+  return DateTime.fromISO(value.replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"), { setZone: true });
+}
+
 function toDateTime(instant: Date | string | number): DateTime {
   const dt =
     instant instanceof Date
       ? DateTime.fromJSDate(instant)
       : typeof instant === "number"
         ? DateTime.fromMillis(instant)
-        : DateTime.fromISO(instant, { setZone: true });
+        : parseInstantString(instant);
   if (!dt.isValid) throw new Error(`Invalid instant: ${String(instant)}`);
   return dt.setZone(IST_ZONE).setLocale(FORMAT_LOCALE);
 }

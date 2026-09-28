@@ -13,8 +13,8 @@ import type { Database } from "../src/lib/supabase/database.types";
 import { createWebPushSenderFromKeys } from "../src/lib/push/web-push-core";
 import { runScheduledJobs } from "../src/lib/scheduler";
 
-config({ path: ".env.local" });
-config();
+config({ path: ".env.local", quiet: true });
+config({ quiet: true });
 
 async function main() {
   const nowArg = process.argv.find((a) => a.startsWith("--now="))?.slice("--now=".length);

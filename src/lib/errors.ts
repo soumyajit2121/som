@@ -8,6 +8,7 @@ export interface DbErrorLike {
 
 const MESSAGES: Record<string, string> = {
   DUPLICATE_MATCH: "A match with the same team, opponent, date, start time and tournament already exists.",
+  TOURNAMENT_REQUIRED: "Select an enrolled tournament for a Tournament Match.",
   TEAM_NOT_ENROLLED: "The selected team is not enrolled in that tournament.",
   CREATOR_MUST_PARTICIPATE:
     "The creator of a match must stay in it. Ask an administrator to take ownership or cancel the match.",

@@ -67,7 +67,12 @@ export function Field({
     <div className={className}>
       <Label htmlFor={id}>
         {label}
-        {required ? <span className="text-red-700"> *</span> : null}
+        {required ? (
+          <span className="text-red-700" aria-hidden="true">
+            {" "}
+            *
+          </span>
+        ) : null}
       </Label>
       {children({
         id,
