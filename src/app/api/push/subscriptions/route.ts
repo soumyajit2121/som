@@ -23,19 +23,17 @@ export async function POST(request: NextRequest) {
       .eq("endpoint", endpoint)
       .neq("profile_id", session.userId);
   }
-  const { error } = await session.supabase
-    .from("push_subscriptions")
-    .upsert(
-      {
-        profile_id: session.userId,
-        endpoint,
-        p256dh: keys.p256dh,
-        auth: keys.auth,
-        device_label: deviceLabel ?? null,
-        failure_count: 0,
-      },
-      { onConflict: "endpoint" },
-    );
+  const { error } = await session.supabase.from("push_subscriptions").upsert(
+    {
+      profile_id: session.userId,
+      endpoint,
+      p256dh: keys.p256dh,
+      auth: keys.auth,
+      device_label: deviceLabel ?? null,
+      failure_count: 0,
+    },
+    { onConflict: "endpoint" },
+  );
   if (error) return jsonError(400, "Could not save this device");
   await session.supabase
     .from("notification_preferences")
