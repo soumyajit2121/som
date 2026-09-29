@@ -1,5 +1,26 @@
 # Deployment (Vercel + Supabase)
 
+## Fastest path: one command
+
+With `SUPABASE_ACCESS_TOKEN` and `VERCEL_TOKEN` set in the environment (never committed, never pasted in chat):
+
+```bash
+npm ci
+npm run deploy                                   # creates/updates Supabase + Vercel, deploys, smoke-tests
+npm run deploy:make-admin -- you@example.com     # after you have signed up in the deployed app
+```
+
+`scripts/deploy.mjs` works entirely over HTTPS:
+
+1. It creates the Supabase project (Mumbai, `ap-south-1`) or reuses an existing one, and applies the migrations through the Management API.
+2. It generates `CRON_SECRET` and the VAPID keys, sets all eight Vercel environment variables, and deploys to production.
+3. It configures Auth (site URL, redirects, email auto-confirm: new accounts still need administrator approval).
+4. It schedules the reminder job with Supabase `pg_cron` every 10 minutes, and runs a smoke test.
+
+Re-running it is safe. Generated secrets are kept in `.deploy/state.json`, which is git-ignored.
+
+The manual steps below do the same thing by hand.
+
 Nothing here has been run against a real account by the build agent — these are the exact steps to perform with your own credentials.
 
 ## 1. Supabase project

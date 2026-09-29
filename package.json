@@ -21,7 +21,9 @@
     "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts && prettier --write src/lib/supabase/database.types.ts",
     "reminders:run": "tsx scripts/run-reminders.ts",
     "icons": "node scripts/generate-icons.mjs",
-    "validate": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build"
+    "validate": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
+    "deploy": "node scripts/deploy.mjs",
+    "deploy:make-admin": "node scripts/deploy.mjs make-admin"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.23",
